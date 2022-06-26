@@ -145,7 +145,7 @@ const getShortestOrder = (points, triesLimit) => {
                 "en-US"
             )}</strong> ways for ${points.length} points.<br/>best distance: ${Math.round(
                 shortestDist
-            )}<br/><span style="font-size: 1.4em; font-weight: bold;">order: ${nextOrder}</span>`;
+            )} (${bestOrder})<br/><span style="font-size: 1.4em; font-weight: bold;">order: ${nextOrder}</span>`;
             const dist = calcTotalDistance(points, nextOrder);
 
             if (dist < shortestDist) {
