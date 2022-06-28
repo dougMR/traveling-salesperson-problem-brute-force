@@ -237,8 +237,8 @@ const getShortestOrderWithEndpoints = (points) => {
             )}</strong> of <strong>${totalWays.toLocaleString(
                 "en-US"
             )}</strong> ways for ${
-                points.length
-            } points.<br/>best distance: ${Math.round(
+                points.length -2 
+            } points (plus static end points).<br/>best distance: ${Math.round(
                 shortestDist
             )} (${bestOrder})<br/><span style="font-size: 1.4em; font-weight: bold;">order: ${fullOrder}</span>`;
             console.log('points: ',points);
