@@ -238,9 +238,9 @@ const getShortestOrderWithEndpoints = (points) => {
                 "en-US"
             )}</strong> ways for ${
                 points.length -2 
-            } points (plus static end points)<br/>shortest path: <strong>${Math.round(
+            } points (plus static end points)<br/>• trying order: <span style="font-size: 1.4em; font-weight: bold;">${fullOrder}</span><br/>• shortest path: <strong>${Math.round(
                 shortestDist
-            )}</strong> (${bestOrder})<br/><span style="font-size: 1.4em; font-weight: bold;">order: ${fullOrder}</span>`;
+            )}</strong> (${bestOrder})`;
             console.log('points: ',points);
             console.log('fullOrder: ',fullOrder);
             const dist = calcTotalDistance(points, fullOrder);
