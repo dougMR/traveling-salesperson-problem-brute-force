@@ -76,14 +76,14 @@ const generateCities = (howMany) => {
     const cities = [];
     for (let i = 0; i < howMany; i++) {
         const x = 10 + Math.round(Math.random() * 280);
-        const y = 10 +Math.round(Math.random() * 280);
+        const y = 10 + Math.round(Math.random() * 280);
         cities.push({ x, y });
     }
     return cities;
 };
 
 const calcTotalDistance = (points, order) => {
-    // Simplified distance calcutation based just on coordinates
+    // Simplified distance calcutation based just on series of coordinates
     let totalDist = 0;
     for (let o = 0; o < order.length - 1; o++) {
         const pointAIndex = order[o];
@@ -113,10 +113,8 @@ const arrangePointsByOrder = (points, order) => {
 };
 
 const getShortestOrder = (points, triesLimit) => {
-    // Randomly trying different orders.
-    // Nothing to prevent repeated order
-    // Not all permutations
-    // Starting point will not change
+    // Try all permutations of path
+
     const testStartPoint = { x: 299, y: 299 };
     console.log("points: ", points);
     let tries = 0;
@@ -143,7 +141,9 @@ const getShortestOrder = (points, triesLimit) => {
                 "en-US"
             )}</strong> of <strong>${totalWays.toLocaleString(
                 "en-US"
-            )}</strong> ways for ${points.length} points.<br/>best distance: ${Math.round(
+            )}</strong> ways for ${
+                points.length
+            } points.<br/>best distance: ${Math.round(
                 shortestDist
             )} (${bestOrder})<br/><span style="font-size: 1.4em; font-weight: bold;">order: ${nextOrder}</span>`;
             const dist = calcTotalDistance(points, nextOrder);
@@ -169,11 +169,15 @@ const getShortestOrder = (points, triesLimit) => {
             // Get next permutation
             nextOrder = lexicalOrder(nextOrder);
 
-           if(tspRunning) requestAnimationFrame(permuteOrder);
+            if (tspRunning) requestAnimationFrame(permuteOrder);
         }
     };
     requestAnimationFrame(permuteOrder);
     // const randomTry = () => {
+    // Randomly trying different orders.
+    // Nothing to prevent repeated order
+    // Not all permutations
+    // Starting point will not change
     //     const i = Math.floor(Math.random() * order.length);
     //     const j = Math.floor(Math.random() * order.length);
     //     const swapOrder = [...order];
@@ -199,6 +203,75 @@ const getShortestOrder = (points, triesLimit) => {
     // requestAnimationFrame(randomTry);
 };
 
+const getShortestOrderWithEndpoints = (points) => {
+    // Try all permutations of path
+    let tries = 0;
+    let shortestDist = Infinity;
+    let order = [];
+    for (let o = 0; o < points.length; o++) {
+        order[o] = o;
+    }
+
+    const startIndex = 0;
+    const endIndex = order.length-1;
+    const startPoint = points[0];
+    const endPoint = points[points.length-1];
+    order = order.slice(1, order.length-1);
+
+    const totalWays = factorialize(order.length);
+    const bestOrder = [...order];
+
+    let nextOrder = [...order];
+    let fullOrder = [startIndex, ...nextOrder, endIndex];
+    const permuteOrder = () => {
+        tries++;
+
+        if (nextOrder === -1) {
+            // return bestOrder;
+            tspRunning = false;
+            setButtonsStyles();
+        } else {
+            fullOrder = [startIndex, ...nextOrder, endIndex];
+            op.innerHTML = `<strong>${tries.toLocaleString(
+                "en-US"
+            )}</strong> of <strong>${totalWays.toLocaleString(
+                "en-US"
+            )}</strong> ways for ${
+                points.length
+            } points.<br/>best distance: ${Math.round(
+                shortestDist
+            )} (${bestOrder})<br/><span style="font-size: 1.4em; font-weight: bold;">order: ${fullOrder}</span>`;
+            console.log('points: ',points);
+            console.log('fullOrder: ',fullOrder);
+            const dist = calcTotalDistance(points, fullOrder);
+
+            if (dist < shortestDist) {
+                shortestDist = dist;
+                bestOrder.length = 0;
+                bestOrder.push(...fullOrder);
+            }
+
+            clearCanvas();
+
+            setLineColor("lime");
+            setLineWeight(4);
+            drawPath(arrangePointsByOrder(points, bestOrder));
+
+            setLineColor("grey");
+            setLineWeight(1);
+            drawPath(arrangePointsByOrder(points, nextOrder));
+
+            // Get next permutation
+            
+            nextOrder = lexicalOrder(nextOrder);
+            console.log('nextOrder: ',nextOrder);
+            
+            if (tspRunning) requestAnimationFrame(permuteOrder);
+        }
+    };
+    requestAnimationFrame(permuteOrder);
+};
+
 let tspRunning = false;
 const setButtonsStyles = () => {
     if (tspRunning) {
@@ -215,15 +288,18 @@ const runTsp = (evt) => {
     tspRunning = true;
     const numCities = document.getElementById("num-cities").value;
     const cities = generateCities(numCities);
-    getShortestOrder(cities);
+    // getShortestOrder(cities);
+    const startPoint = {x:275,y:290};
+    const endPoint = {x:25,y:290};
+    getShortestOrderWithEndpoints([startPoint, ...cities, endPoint]);
     setButtonsStyles();
 };
 const stopTsp = (evt) => {
     tspRunning = false;
     setButtonsStyles();
-}
+};
 tspButton.addEventListener("click", runTsp);
-tspStopButton.addEventListener('click',stopTsp);
+tspStopButton.addEventListener("click", stopTsp);
 runTsp();
 
 // permute([1, 5, 7, 3, 2, 9]);
