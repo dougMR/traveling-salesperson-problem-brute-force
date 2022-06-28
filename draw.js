@@ -29,6 +29,19 @@ const drawLine = (p1, p2) => {
     ctx.stroke();
 };
 
+const drawPointsNumbers = (points) => {
+    for(let p = 0; p < points.length; p++){
+        drawNumber(p, points[p]);
+    }
+}
+const drawNumber = (num, point) => {
+    ctx.fillStyle = 'black';
+    ctx.font = '16px sans-serif';
+    const x = (point.x-5) * canvasScale;
+    const y = (point.y-5)*canvasScale;
+    ctx.fillText(num, x, y);
+}
+
 const setLineColor = (color) => {
     ctx.strokeStyle = color;
 }

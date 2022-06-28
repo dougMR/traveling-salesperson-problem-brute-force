@@ -223,6 +223,7 @@ const getShortestOrderWithEndpoints = (points) => {
 
     let nextOrder = [...order];
     let fullOrder = [startIndex, ...nextOrder, endIndex];
+    // const numericEndings = ['th','st','nd','rd','th','th','th','th','th','th'];
     const permuteOrder = () => {
         tries++;
 
@@ -232,15 +233,16 @@ const getShortestOrderWithEndpoints = (points) => {
             setButtonsStyles();
         } else {
             fullOrder = [startIndex, ...nextOrder, endIndex];
+            // const numberEnding = numericEndings[tries % 10];
             op.innerHTML = `<strong>${tries.toLocaleString(
                 "en-US"
             )}</strong> of <strong>${totalWays.toLocaleString(
                 "en-US"
             )}</strong> ways for ${
                 points.length -2 
-            } points (plus static end points)<br/>• trying order: <span style="font-size: 1.4em; font-weight: bold;">${fullOrder}</span><br/>• shortest path: <strong>${Math.round(
+            } points (plus static end points)<br/>• shortest path: <strong>${Math.round(
                 shortestDist
-            )}</strong> (${bestOrder})`;
+            )}</strong> <span style="font-size: 1.1em; letter-spacing: -1px;">${bestOrder}</span><br/>• trying order: <span style="font-size: 1.4em; font-weight: bold;">${fullOrder}</span>`;
             console.log('points: ',points);
             console.log('fullOrder: ',fullOrder);
             const dist = calcTotalDistance(points, fullOrder);
@@ -256,6 +258,7 @@ const getShortestOrderWithEndpoints = (points) => {
             setLineColor("lime");
             setLineWeight(4);
             drawPath(arrangePointsByOrder(points, bestOrder));
+            // drawPointsNumbers(points);
 
             setLineColor("grey");
             setLineWeight(1);
